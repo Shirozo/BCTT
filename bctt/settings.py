@@ -60,7 +60,7 @@ ROOT_URLCONF = 'bctt.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['static', 'drivers/templates', 'transaction/templates', 'admin/templates'],
+        'DIRS': ['static', 'drivers/templates', 'transaction/templates', 'account/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -134,6 +134,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     join(BASE_DIR, 'static')
 ]
+
+LOGIN_URL = '/account/login'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
