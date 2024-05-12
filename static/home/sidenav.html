@@ -3,7 +3,7 @@
     <!-- Brand -->
     <div class="sidenav-header  align-items-center">
       <a class="navbar-brand" href="{% url 'home' %}">
-        <img src="/static/icon.png" style="size: 50px;" alt="Diocese of Borongan">
+        <img src="/static/icon.png" style="size: 50px;" alt="BCTT">
       </a>
     </div>
     <div class="navbar-inner">
@@ -11,14 +11,14 @@
       <div class="collapse navbar-collapse" id="sidenav-collapse-main">
         <!-- Nav items -->
         <ul class="navbar-nav" style="margin-top: 60px;">
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link {% if 'index' in segment %} active {% endif %}" href="{% url 'home' %}">
               <i class="ni ni-tv-2 text-primary"></i>
               <span class="nav-link-text">Dashboard</span>
             </a>
-          </li>
+          </li> -->
           <li class="nav-item">
-            <a class="nav-link {% if 'icons' in segment %} active {% endif %}" href="" url 'transac'%}">
+            <a class="nav-link {% if 'icons' in segment %} active {% endif %}" href="{% url 'reload'%}">
               <i class="fa fa-money-bill"></i>
               <span class="nav-link-text">Reload</span>
             </a>
@@ -37,7 +37,7 @@
           </li>
           
             <li class="nav-item">
-              <a class="nav-link {% if 'icons' in segment %} active {% endif %}" href="" url 'transac'%}">
+              <a class="nav-link {% if 'icons' in segment %} active {% endif %}" href="{% url 'transac'%}">
                 <i class="fa fa-receipt"></i>
                 <span class="nav-link-text">Transaction</span>
               </a>
