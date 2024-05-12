@@ -19,7 +19,7 @@ def tricycle(request):
             driver = driverForm.save(commit= False) 
             driver.vhs = 2
 
-            qr = qrcode.make({"key" : f"{driver.plate_number}-{driver.rate}"})
+            qr = qrcode.make({"key" : f"{driver.id}-{driver.plate_number}-{driver.rate}"})
             dest = f"qr/{driver.plate_number}.png"
             qr.save(dest)
 
@@ -83,7 +83,7 @@ def cab(request):
         else:
             messages.error(request, "Invalid Form")
 
-    drivers = Driver.objects.filter(vhs=2)
+    drivers = Driver.objects.filter(vhs=1)
     context['drivers'] = drivers
     context['driverform'] = driverForm
     context['operatorForm'] = operatorForm

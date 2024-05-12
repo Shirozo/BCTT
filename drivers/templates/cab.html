@@ -87,7 +87,7 @@
             Add New Driver
           </div>
           <div class="modal-body">
-            <form class="form-horizontal" method="POST" action="{% url 'tryc' %}">
+            <form class="form-horizontal" method="POST" action="{% url 'cab' %}">
               {% csrf_token %}
               <b>Driver Form</b>
                 {% for i in driverform %}
