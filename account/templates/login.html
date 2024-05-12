@@ -1,0 +1,64 @@
+{% extends 'home/base-fullscreen.html' %}
+
+{% block title %} Login {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- Page content -->
+    <div class="container mt--8 pb-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+          <div class="card bg-secondary shadow border-0">
+            <div class="card-header bg-transparent pb-5">
+              <div class="text-muted text-center">
+                Sign IN
+              </div>
+            </div>
+            <div class="card-body px-lg-5 py-lg-5">
+              <div class="text-center text-muted mb-4">
+
+                {% if msg %}
+                  <p>{{ msg }}</p>
+                {% else %}
+                  <p>
+                    Add your credentials
+                  </p>
+                {% endif %}  
+
+              </div>
+
+              <form method="POST" action="{% url 'login' %}">
+
+                {% csrf_token %}
+
+                <div class="form-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fa fa-user"></i></span>
+                      {{ form.username.label_tag }}
+                      <input type="text" name="username" id="id_username" class="form-control" placeholder="Enter your username">
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-key"></i></span>
+                    {{ form.password.label_tag }}
+                     <input type="password" name="password" id="id_password" class="form-control" placeholder="Enter your password">
+                  </div>
+              </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary my-4">Sign in</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}
