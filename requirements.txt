@@ -1,0 +1,5 @@
+django
+mysqlclient
+fpdf
+mariadb
+qrcode
