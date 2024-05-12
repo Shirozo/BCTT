@@ -5,7 +5,10 @@ from .forms import DriverForm, OperatorForm
 import qrcode
 from django.http import JsonResponse
 import base64
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+
+@login_required
 def tricycle(request):
     context = {}
     if request.method != "POST":
@@ -37,6 +40,7 @@ def tricycle(request):
 
     return render(request, "tricycle.html", context)
 
+@login_required
 def getQr(request):
     context = {}
     if request.method == "POST":
@@ -59,6 +63,7 @@ def getQr(request):
 
     return JsonResponse(context)
 
+@login_required
 def cab(request):
     context = {}
     if request.method != "POST":
