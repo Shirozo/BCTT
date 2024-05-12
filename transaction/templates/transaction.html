@@ -1,0 +1,119 @@
+{% extends 'home/base.html' %}
+
+{% block title %} Transaction {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-8 pt-5">
+      <div class="container-fluid">
+        <!-- HTML !-->
+        <div class="header-body">
+          <!-- Card stats -->
+          <div class="row">
+            <div class="col-xl-3 col-lg-6">
+              <div class="card card-stats mb-4 mb-xl-0">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Transaction Count</h5>
+                      <span class="h2 font-weight-bold mb-0">1000</span>
+                    </div>
+                    
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                        <i class="fa fa-layer-group"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="mt-3 mb-0 text-muted text-sm">
+                    <span class="text-success mr-2"></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+              <div class="card card-stats mb-4 mb-xl-0">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Transaction Amount</h5>
+                      <span class="h2 font-weight-bold mb-0">1000</span>
+                    </div>
+                    
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                        <i class="fa fa-dollar"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="mt-3 mb-0 text-muted text-sm">
+                    <span class="text-success mr-2"></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid mt--7">
+
+      <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header bg-transparent">
+              <h3 class="mb-0" style="float: left;">Transaction</h3>
+            </div>
+            <div style="padding: 1%;">
+              <table id="example" class="table table-striped" width="100%">
+                <thead>
+                  <tr>
+                    <th>Driver</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for t in transact %}
+                    <tr>
+                      <td>{{t.driver}}</td>
+                      <td>{{t.amount}}</td>
+                      <td>{{t.scanDate}}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+<script src="/static/assets/vendor/clipboard/dist/clipboard.min.js"></script>
+<script>
+  $(document).ready(() => {
+    $("#example").DataTable({
+      responsive: true,
+      "order" : [
+        [3, 'desc']
+     ],
+     "columnDefs": [
+     {"className": "dt-center", "targets": "_all"},
+    ],
+    })
+  })
+
+</script>
+{% endblock javascripts %}

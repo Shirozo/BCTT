@@ -1,0 +1,155 @@
+{% extends 'home/base.html' %}
+
+{% block title %} Reload {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-8 pt-5">
+      <div class="container-fluid">
+        <!-- HTML !-->
+        <div class="header-body">
+          <!-- Card stats -->
+          <div class="row">
+            <div class="col-xl-3 col-lg-6">
+              <div class="card card-stats mb-4 mb-xl-0">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Today's Reload</h5>
+                      <span class="h2 font-weight-bold mb-0">1000</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                        <i class="fa fa-layer-group"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="mt-3 mb-0 text-muted text-sm">
+                    <span class="text-success mr-2"></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid mt--7">
+
+      <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header bg-transparent">
+              <h3 class="mb-0" style="float: left;">Reload Transaction</h3>
+              <a href="#reload" data-toggle="modal" class="button-34">Reload</a>
+            </div>
+            <div style="padding: 1%;">
+              <table id="example" class="table table-striped" width="100%">
+                <thead>
+                  <tr>
+                    <th>Transaction ID</th>
+                    <th>Driver</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for h in hstry %}
+                    <tr>
+                      <td>{{h.id}}</td>
+                      <td>{{h.driver}}</td>
+                      <td>{{h.amount}}</td>
+                      <td>{{h.transact_date}}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal fade" id="reload">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            Reload Account
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal" method="POST" action="{% url 'reload' %}">
+              {% csrf_token %}
+              {% for i in reload_form %}
+                <div class="form-group has-feedback">
+                  <span class="text-danger">{{i.errors}}</span>
+                  {{i.label_tag}}
+                  {{i}}
+                </div>
+              {% endfor %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+            <button type="submit" class="btn btn-success btn-flat" name="add"><i class="fa fa-save"></i> Save</button>
+          </div></form>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="modal fade" id="editFund">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            Edit Category
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal" method="POST" action="#">
+              {% csrf_token %}
+              <input type="hidden" class="id" name="id">
+              <div class="form-group has-feedback">
+                  <label for="edit_name">Name</label>
+                  <input type="text" class="form-control" id="edit_name" name="name">
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-flat pull-left" id="closeModal"><i class="fa fa-close"></i> Close</button>
+            <button type="submit" class="btn btn-success btn-flat" name="edit"><i class="fa fa-check-square-o"></i> Update</button>
+            </form>
+        </div>
+        </div>
+      </div>
+      </div>
+      </div>
+    </div> -->
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+<script src="/static/assets/vendor/clipboard/dist/clipboard.min.js"></script>
+<script>
+  $(document).ready(() => {
+    $("#example").DataTable({
+      responsive: true,
+      "order" : [
+        [3, 'desc']
+     ],
+     "columnDefs": [
+     {"className": "dt-center", "targets": "_all"},
+     { width: '40%', targets: 1 }
+    ],
+    })
+
+    $('#id_driver').select2({
+      width: "45%",
+      dropdownParent: $("#reload")
+    })
+  })
+
+</script>
+{% endblock javascripts %}
