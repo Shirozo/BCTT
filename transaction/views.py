@@ -4,7 +4,10 @@ from django.contrib import messages
 from drivers.models import Driver
 from .models import Transaction, DriverScan
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+
+@login_required
 def reload(request):
     context = {}
     if request.method == "POST":
@@ -58,6 +61,7 @@ def scanQr(request):
 
     return JsonResponse(context)
 
+@login_required
 def transactions(request):
     transact = DriverScan.objects.all()
     context = {
