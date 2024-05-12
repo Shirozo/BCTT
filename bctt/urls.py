@@ -17,5 +17,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', include("admin.urls")),
-    path("driver/", include("drivers.urls"))
+    path("driver/", include("drivers.urls")),
+    path("transaction/", include("transaction.urls"))
 ]

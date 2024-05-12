@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     'admin.apps.AdminConfig',
-    'drivers.apps.DriversConfig'
+    'drivers.apps.DriversConfig',
+    'transaction.apps.TransactionConfig'
 ]
 
 MIDDLEWARE = [
@@ -116,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Manila'
 
 USE_I18N = True
 
