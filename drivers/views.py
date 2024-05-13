@@ -20,7 +20,7 @@ def tricycle(request):
 
         if driverForm.is_valid() and operatorForm.is_valid():
             driver = driverForm.save() 
-            qr = qrcode.make({"key" : f"{driver.id}-{driver.plate_number}-{driver.rate}"})
+            qr = qrcode.make(f"{driver.id}-{driver.plate_number}-{driver.rate}")
             dest = f"qr/{driver.plate_number}.png"
             qr.save(dest)
 
