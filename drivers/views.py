@@ -19,15 +19,15 @@ def tricycle(request):
         operatorForm = OperatorForm(request.POST)
 
         if driverForm.is_valid() and operatorForm.is_valid():
-            driver = driverForm.save(commit= False) 
-            driver.vhs = 2
-
+            driver = driverForm.save() 
             qr = qrcode.make({"key" : f"{driver.id}-{driver.plate_number}-{driver.rate}"})
             dest = f"qr/{driver.plate_number}.png"
             qr.save(dest)
 
-            driver.qr_code = dest
-            driver.save()
+
+            Driver.objects.filter(id=driver.id).update(
+                qr_code = dest, vhs = 2
+            )
             operatorForm.save()
             
         else:
