@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
-from .models import Driver
+from .models import Driver, Operator
 from .forms import DriverForm, OperatorForm
 import qrcode
 from django.http import JsonResponse
@@ -21,7 +21,7 @@ def tricycle(request):
         if driverForm.is_valid() and operatorForm.is_valid():
             driver = driverForm.save() 
             qr = qrcode.make(f"{driver.id}-{driver.plate_number}-{driver.rate}")
-            dest = f"qr/{driver.plate_number}.png"
+            dest = f"qr/{driver.id}.png"
             qr.save(dest)
 
             op = operatorForm.save()
@@ -37,9 +37,11 @@ def tricycle(request):
     drivers = Driver.objects.filter(vhs=2)
     context['drivers'] = drivers
     context['driverform'] = driverForm
+    context['header'] = "Tricycle"
+    context['count'] = drivers.count()
     context['operatorForm'] = operatorForm
 
-    return render(request, "tricycle.html", context)
+    return render(request, "driver.html", context)
 
 @login_required
 def getQr(request):
@@ -49,8 +51,16 @@ def getQr(request):
         data = Driver.objects.filter(id=id)
         if data.exists():
             file_path = data[0].qr_code
-            context["name"] = str(data[0])
+
+            context['first_name'] = data[0].first_name
+            context['last_name'] = data[0].last_name
             context['plate_number'] = data[0].plate_number
+            context['rate'] = data[0].rate
+            context['op_first_name'] = data[0].operator.operator_first_name
+            context['op_last_name'] = data[0].operator.operator_last_name
+            context['address'] = data[0].operator.operator_address
+            context['id'] = data[0].pk
+
             with open(file_path, 'rb') as image_file:
                 image_data = image_file.read()
                 # Encode the binary data as base64 string
@@ -77,16 +87,13 @@ def cab(request):
         if driverForm.is_valid() and operatorForm.is_valid():
             driver = driverForm.save() 
             qr = qrcode.make(f"{driver.id}-{driver.plate_number}-{driver.rate}")
-            dest = f"qr/{driver.plate_number}.png"
+            dest = f"qr/{driver.id}.png"
             qr.save(dest)
 
-
+            op = operatorForm.save()
             Driver.objects.filter(id=driver.id).update(
-                qr_code = dest, vhs = 1
+                qr_code = dest, vhs = 1, operator=op
             )
-            op = operatorForm.save(commit=False)
-            op.driver = driver
-            op.save()
 
             messages.success(request, "New Driver Added!")
             
@@ -96,6 +103,47 @@ def cab(request):
     drivers = Driver.objects.filter(vhs=1)
     context['drivers'] = drivers
     context['driverform'] = driverForm
+    context['header'] = "Cab"
+    context['count'] = drivers.count()
     context['operatorForm'] = operatorForm
 
-    return render(request, "cab.html", context)
+    return render(request, "driver.html", context)
+
+
+@login_required
+def update(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            id = request.POST.get("id")
+
+            driver_data = Driver.objects.get(id=id)
+
+            new_driver_data = DriverForm(request.POST or None, instance=driver_data)
+
+            operator_data = Operator.objects.get(id=driver_data.pk)
+
+            new_op = OperatorForm(request.POST or None, instance=operator_data)
+
+            if new_driver_data.is_valid() and new_op.is_valid():
+                nd = new_driver_data.save()
+                new_op.save()
+
+                qr = qrcode.make(f"{nd.id}-{nd.plate_number}-{nd.rate}")
+                dest = f"qr/{nd.id}.png"
+                qr.save(dest)
+
+                messages.success(request, "Updated Succesfully!")
+
+            else:
+                messages.error(request, "Form Validation Failed!")
+            
+        else:
+            messages.error(request, "Access Forbidden")
+
+    else:
+        messages.error(request, "Access Denied!")
+    
+    past_url = request.POST.get('rdr')
+    if past_url == "Cab":
+        return redirect(reverse("cab"))
+    return redirect(reverse("tryc"))
