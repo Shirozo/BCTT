@@ -24,11 +24,12 @@ def tricycle(request):
             dest = f"qr/{driver.plate_number}.png"
             qr.save(dest)
 
-
+            op = operatorForm.save()
             Driver.objects.filter(id=driver.id).update(
-                qr_code = dest, vhs = 2
+                qr_code = dest, vhs = 2, operator=op
             )
-            operatorForm.save()
+
+            messages.success(request, "New Driver Added!")
             
         else:
             messages.error(request, "Invalid Form")
@@ -74,16 +75,20 @@ def cab(request):
         operatorForm = OperatorForm(request.POST)
 
         if driverForm.is_valid() and operatorForm.is_valid():
-            driver = driverForm.save(commit= False) 
-            driver.vhs = 1
-
-            qr = qrcode.make({"key" : f"{driver.plate_number}-{driver.rate}"})
+            driver = driverForm.save() 
+            qr = qrcode.make(f"{driver.id}-{driver.plate_number}-{driver.rate}")
             dest = f"qr/{driver.plate_number}.png"
             qr.save(dest)
 
-            driver.qr_code = dest
-            driver.save()
-            operatorForm.save()
+
+            Driver.objects.filter(id=driver.id).update(
+                qr_code = dest, vhs = 1
+            )
+            op = operatorForm.save(commit=False)
+            op.driver = driver
+            op.save()
+
+            messages.success(request, "New Driver Added!")
             
         else:
             messages.error(request, "Invalid Form")
