@@ -5,6 +5,7 @@ from drivers.models import Driver
 from .models import Transaction, DriverScan
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 # Create your views here.
 
 @login_required
@@ -56,6 +57,7 @@ def scanQr(request):
 
                 has_data.update(balance = driver_data.balance - int(rate))
                 context['code'] = 200
+                context['plate_number'] = driver_data.plate_number
                 context['message'] = "Transaction Success!"
             else:
                 context['code'] = 403
@@ -69,7 +71,10 @@ def scanQr(request):
 @login_required
 def transactions(request):
     transact = DriverScan.objects.all()
+    total = transact.aggregate(total=Sum('amount'))['total']
     context = {
-        "transact" : transact
+        "transact" : transact,
+        "count" : transact.count(),
+        "total" : total
     }
     return render(request, "transaction.html", context)
