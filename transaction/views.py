@@ -37,27 +37,32 @@ def reload(request):
 def scanQr(request):
     context = {}
     data = request.GET.get("data")
-    id, plate_number, rate = data.split("-")
-    
-    has_data = Driver.objects.filter(id=id, plate_number=plate_number)
-
-    if has_data.exists():
-        
-        driver_data = has_data[0]
-
-        if driver_data.balance >= int(rate):
-            transact_detail = DriverScan(driver=driver_data, amount=rate)
-            transact_detail.save()
-
-            has_data.update(balance = driver_data.balance - int(rate))
-            context['code'] = 200
-            context['message'] = "Transaction Success!"
-        else:
-            context['code'] = 403
-            context['message'] = "Insufficient Balance!"
+    try:
+        id, plate_number, rate = data.split("-")
+    except Exception:
+        context['code'] = 500
+        context['message'] = "Invalid QR Code!"
     else:
-        context['code'] = 404
-        context["message"] = "Driver Details not Found"
+        print(id)
+        has_data = Driver.objects.filter(id=id, plate_number=plate_number)
+
+        if has_data.exists():
+            
+            driver_data = has_data[0]
+
+            if driver_data.balance >= int(rate):
+                transact_detail = DriverScan(driver=driver_data, amount=rate)
+                transact_detail.save()
+
+                has_data.update(balance = driver_data.balance - int(rate))
+                context['code'] = 200
+                context['message'] = "Transaction Success!"
+            else:
+                context['code'] = 403
+                context['message'] = "Insufficient Balance!"
+        else:
+            context['code'] = 404
+            context["message"] = "Driver Details not Found"
 
     return JsonResponse(context)
 
