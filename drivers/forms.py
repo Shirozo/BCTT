@@ -22,7 +22,7 @@ class OperatorForm(FormSetting):
     class Meta:
         model = Operator
         fields = [
-            "first_name",
-            "last_name",
-            "address"
+            "operator_first_name",
+            "operator_last_name",
+            "operator_address"
         ]
