@@ -21,4 +21,8 @@ class DriverForm(FormSetting):
 class OperatorForm(FormSetting):
     class Meta:
         model = Operator
-        fields = "__all__"
+        fields = [
+            "first_name",
+            "last_name",
+            "address"
+        ]
