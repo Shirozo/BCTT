@@ -54,7 +54,7 @@
                   <tr>
                     <th class="th-sm">Driver</th>
                     <th>Operator</th>
-                    <th>Plate Number</th>
+                    <th>Body Number</th>
                     <th>Balance</th>
                     <th class="th-sm">Action</th>
                   </tr>
@@ -87,7 +87,7 @@
             Add New Driver
           </div>
           <div class="modal-body">
-            <form class="form-horizontal" method="POST" {% if header == 'Cab'%} action="{% url 'cab' %}" {% else %}  action="{% url 'tryc' %}" {% endif %}>
+            <form class="form-horizontal" method="POST" action="{% url 'tryc' %}">
               {% csrf_token %}
               <b>Driver Form</b>
                 {% for i in driverform %}

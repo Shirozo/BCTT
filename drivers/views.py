@@ -74,40 +74,40 @@ def getQr(request):
 
     return JsonResponse(context)
 
-@login_required
-def cab(request):
-    context = {}
-    if request.method != "POST":
-        driverForm = DriverForm()
-        operatorForm = OperatorForm
-    else:
-        driverForm = DriverForm(request.POST)
-        operatorForm = OperatorForm(request.POST)
+# @login_required
+# def cab(request):
+#     context = {}
+#     if request.method != "POST":
+#         driverForm = DriverForm()
+#         operatorForm = OperatorForm
+#     else:
+#         driverForm = DriverForm(request.POST)
+#         operatorForm = OperatorForm(request.POST)
 
-        if driverForm.is_valid() and operatorForm.is_valid():
-            driver = driverForm.save() 
-            qr = qrcode.make(f"{driver.id}-{driver.plate_number}-{driver.rate}")
-            dest = f"qr/{driver.id}.png"
-            qr.save(dest)
+#         if driverForm.is_valid() and operatorForm.is_valid():
+#             driver = driverForm.save() 
+#             qr = qrcode.make(f"{driver.id}-{driver.plate_number}-{driver.rate}")
+#             dest = f"qr/{driver.id}.png"
+#             qr.save(dest)
 
-            op = operatorForm.save()
-            Driver.objects.filter(id=driver.id).update(
-                qr_code = dest, vhs = 1, operator=op
-            )
+#             op = operatorForm.save()
+#             Driver.objects.filter(id=driver.id).update(
+#                 qr_code = dest, vhs = 1, operator=op
+#             )
 
-            messages.success(request, "New Driver Added!")
+#             messages.success(request, "New Driver Added!")
             
-        else:
-            messages.error(request, "Invalid Form")
+#         else:
+#             messages.error(request, "Invalid Form")
 
-    drivers = Driver.objects.filter(vhs=1)
-    context['drivers'] = drivers
-    context['driverform'] = driverForm
-    context['header'] = "Cab"
-    context['count'] = drivers.count()
-    context['operatorForm'] = operatorForm
+#     drivers = Driver.objects.filter(vhs=1)
+#     context['drivers'] = drivers
+#     context['driverform'] = driverForm
+#     context['header'] = "Cab"
+#     context['count'] = drivers.count()
+#     context['operatorForm'] = operatorForm
 
-    return render(request, "driver.html", context)
+#     return render(request, "driver.html", context)
 
 
 @login_required

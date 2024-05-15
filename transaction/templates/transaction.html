@@ -73,7 +73,8 @@
               <table id="example" class="table table-striped" width="100%">
                 <thead>
                   <tr>
-                    <th>Driver</th>
+                    <th>Body Number</th>
+                    <th>Endpoint</th>
                     <th>Amount</th>
                     <th>Date</th>
                   </tr>
@@ -81,7 +82,8 @@
                 <tbody>
                   {% for t in transact %}
                     <tr>
-                      <td>{{t.driver}}</td>
+                      <td>{{t.driver.plate_number}}</td>\
+                      <td>{{t.endpoint}}</td>
                       <td>{{t.amount}}</td>
                       <td>{{t.scanDate}}</td>
                     </tr>
