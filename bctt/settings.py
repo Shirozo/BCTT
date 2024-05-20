@@ -85,11 +85,11 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'bctt',
         'HOST': '127.0.0.1',
-        'USER': 'bctt',
-        'PASSWORD': 'bctt'
+        'USER': 'postgres',
+        'PASSWORD': '12345'
     }
 }
 
