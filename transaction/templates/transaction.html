@@ -68,6 +68,7 @@
           <div class="card shadow">
             <div class="card-header bg-transparent">
               <h3 class="mb-0" style="float: left;">Transaction</h3>
+              <a href="#addTransac" data-toggle="modal" class="button-34">Add New</a>
             </div>
             <div style="padding: 1%;">
               <table id="example" class="table table-striped" width="100%">
@@ -82,7 +83,7 @@
                 <tbody>
                   {% for t in transact %}
                     <tr>
-                      <td>{{t.driver.plate_number}}</td>\
+                      <td>{{t.driver.plate_number}}</td>
                       <td>{{t.endpoint}}</td>
                       <td>{{t.amount}}</td>
                       <td>{{t.scanDate}}</td>
@@ -92,6 +93,28 @@
               </table>
           </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="addTransac">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            Transaction
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal" method="GET" action="/scan/">
+              {% csrf_token %}
+              <b>Code:</b>
+              <input type="text" name="data" id="data" class="form-control">
+              <input type="hidden" name="endpoint" id="endpoint" value="pepelitan">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+            <button type="submit" class="btn btn-success btn-flat" name="add"><i class="fa fa-save"></i> Save</button>
+          </div></form>
         </div>
       </div>
     </div>

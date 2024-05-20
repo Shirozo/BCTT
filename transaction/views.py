@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from .forms import TransactionForm
 from django.contrib import messages
 from drivers.models import Driver
@@ -35,6 +35,7 @@ def reload(request):
     return render(request, "reload.html", context)
 
 
+@login_required
 def scanQr(request):
     context = {}
     data = request.GET.get("data")
@@ -44,11 +45,13 @@ def scanQr(request):
     except Exception:
         context['code'] = 500
         context['message'] = "Invalid QR Code!"
+        messages.error(request, "Invalid QR Code!")
     else:
         
         if not endpoint:
             context["code"] = 405
             context["message"] = "Invalid QR Code!"
+            messages.error(request, "Invalid QR Code!")
         
         else:
             has_data = Driver.objects.filter(id=id, plate_number=plate_number)
@@ -66,14 +69,19 @@ def scanQr(request):
                     context['code'] = 200
                     context['plate_number'] = driver_data.plate_number
                     context['message'] = "Transaction Success!"
+                    messages.success(request, "Transaction Success!")
                 else:
                     context['code'] = 403
                     context['message'] = "Insufficient Balance!"
+                    messages.error(request, "Insufficient Balance!")
+
             else:
                 context['code'] = 404
                 context["message"] = "Driver Details not Found"
+                messages.error(request, "Driver Details not Found")
 
-    return JsonResponse(context)
+
+    return redirect(reverse("transac"))
 
 @login_required
 def transactions(request):
