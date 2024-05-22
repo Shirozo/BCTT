@@ -12,8 +12,8 @@ class Operator(models.Model):
 
 class Driver(models.Model):
     class VehicleIdentity(models.TextChoices):
-        Cab = 1, "Cab"
-        Tricycle = 2, "Tricycle"
+        Cab = "1", "Cab"
+        Tricycle = "2", "Tricycle"
 
     first_name = models.CharField(max_length=50, null=False)
     last_name = models.CharField(max_length=50, null=False)
