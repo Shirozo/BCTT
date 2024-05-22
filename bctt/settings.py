@@ -42,14 +42,11 @@ INSTALLED_APPS = [
 
     'account.apps.AccountConfig',
     'drivers.apps.DriversConfig',
-    'transaction.apps.TransactionConfig',
-
-    'whitenoise.runserver_nostatic'
+    'transaction.apps.TransactionConfig'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -133,11 +130,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/staticfiles/'
-STATIC_ROOT = join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     join(BASE_DIR, 'static')
 ]
+
 LOGIN_URL = '/account/login'
 
 # Default primary key field type
