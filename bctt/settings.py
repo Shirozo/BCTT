@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from os.path import join
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-k4t989&j13qau!(sgknt(6nf!e511&xsh2%h24mu)y!=v6g_p-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*", ".vercel.app"]
+ALLOWED_HOSTS = ['.now.sh', ".vercel.app"]
 
 
 # Application definition
@@ -81,16 +82,13 @@ WSGI_APPLICATION = 'bctt.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "bctt",
+        'USER': "default",
+        'PASSWORD': "VDdXmI1ptfM9",
+        'HOST': "ep-little-silence-a166z71m-pooler.ap-southeast-1.aws.neon.tech",
+        'PORT': "5432",
     }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'bctt',
-    #     'HOST': '127.0.0.1',
-    #     'USER': 'postgres',
-    #     'PASSWORD': '12345'
-    # }
 }
 
 
