@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-k4t989&j13qau!(sgknt(6nf!e511&xsh2%h24mu)y!=v6g_p-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["192.168.163.126", "*", ".vercel.app"]
+ALLOWED_HOSTS = ["*", ".vercel.app"]
 
 
 # Application definition
@@ -42,11 +42,14 @@ INSTALLED_APPS = [
 
     'account.apps.AccountConfig',
     'drivers.apps.DriversConfig',
-    'transaction.apps.TransactionConfig'
+    'transaction.apps.TransactionConfig',
+
+    'whitenoise.runserver_nostatic'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -130,8 +133,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = ('static',)
+STATIC_URL = '/staticfiles/'
+STATIC_ROOT = join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    join(BASE_DIR, 'static')
+]
 LOGIN_URL = '/account/login'
 
 # Default primary key field type
