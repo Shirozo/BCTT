@@ -1,0 +1,38 @@
+<nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
+  <div class="scrollbar-inner">
+    <!-- Brand -->
+    <div class="sidenav-header  align-items-center">
+      <a class="navbar-brand" href="{% url 'transac' %}">
+        <img src="/static/icon.png" style="size: 50px;" alt="BCTT">
+      </a>
+    </div>
+    <div class="navbar-inner">
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+        <!-- Nav items -->
+        <ul class="navbar-nav" style="margin-top: 60px;">
+          <li class="nav-item">
+            <a class="nav-link {% if 'icons' in segment %} active {% endif %}" href="{% url 'reload'%}">
+              <i class="fa fa-money-bill"></i>
+              <span class="nav-link-text">Reload</span>
+            </a>
+          </li>  
+          <li class="nav-item">
+            <a class="nav-link {% if 'map' in segment %} active {% endif %}" href="{% url 'tryc' %}">
+              <i class="fa fa-motorcycle"></i>
+              <span class="nav-link-text">Tricycle</span>
+            </a>
+          </li>
+
+          
+            <li class="nav-item">
+              <a class="nav-link {% if 'icons' in segment %} active {% endif %}" href="{% url 'transac'%}">
+                <i class="fa fa-receipt"></i>
+                <span class="nav-link-text">Transaction</span>
+              </a>
+            </li>       
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

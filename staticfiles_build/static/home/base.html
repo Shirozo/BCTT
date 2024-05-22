@@ -1,0 +1,82 @@
+<!--
+=========================================================
+* Argon Dashboard - v1.2.0
+=========================================================
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+
+
+* Copyright  Creative Tim (http://www.creative-tim.com)
+* Coded by www.creative-tim.com
+
+
+
+=========================================================
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <title>
+    {% block title %}{% endblock %}
+  </title>
+
+  <!-- Favicon - loaded as static -->
+  <link rel="icon" href="/static/icon.png" type="image/png">
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+  <!-- Icons -->
+  <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
+  <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free-6.5.1-web/css/all.min.css" type="text/css">
+  <link rel="stylesheet" href="/static/simple.css">
+  <link rel="stylesheet" href="/static/assets/css/bootstrap/dataTables.bootstrap5.css">
+  <link rel="stylesheet" href="/static/assets/css/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/assets/css/select2.min.css">
+  <!-- Page plugins -->
+  <!-- Argon CSS -->
+  <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
+
+  <script defer src="/static/assets/js/jquery-3.7.1.js"></script>
+  <script defer src="/static/assets/js/dataTables.js"></script>
+  <script defer src="/static/assets/js/dataTables.bootstrap5.js"></script>
+  <script defer src="/static/assets/js/bootstrap.bundle.min.js"></script>
+
+  <link rel="stylesheet" href="/static/assets/css/toastr.min.css">
+  
+  <!-- Specific CSS goes HERE -->
+  {% block stylesheets %}{% endblock stylesheets %}
+
+</head>
+
+<body class="">
+
+  {% include "home/sidenav.html" %}
+
+  <div class="main-content" id="panel">
+
+    {% include "home/navigation.html" %}
+
+    {% block content %}{% endblock content %}
+
+  </div>
+
+  {% include "home/scripts.html" %}
+
+  <!-- Specific JS goes HERE --> 
+  {% block javascripts %}{% endblock javascripts %}
+
+  <script src="/static/assets/js/argon.js?v=1.2.0"></script>
+  {% if messages %}
+    {% for message in messages  %}
+      <script>
+          toastr.{{ message.tags }}('{{ message }}', '{{ message.tags|title }}');
+      </script>
+    {% endfor %}
+  {% endif %}
+
+</body>
+
+</html>
