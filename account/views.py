@@ -14,10 +14,13 @@ def loginPage(request):
             print(forms)
             username = forms.cleaned_data.get("username")
             password = forms.cleaned_data.get("password")
+            print(password)
             user = authenticate(username=username, password=password)
             if user:
                 login(request, user)
+                messages.success(request, "Welcome!")
                 return redirect(reverse("transac"))
+            messages.error(request, "Invalid Username or Password!")
         else:
             forms = AuthenticationForm()
         return render(request, "login.html", context={"forms" : forms})
