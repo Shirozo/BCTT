@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from os.path import join
 import os
+# import dj_database_url
+# from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-k4t989&j13qau!(sgknt(6nf!e511&xsh2%h24mu)y!=v6g_p-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['.now.sh', ".vercel.app"]
+ALLOWED_HOSTS = ['.now.sh', ".vercel.app", "*"]
 
 
 # Application definition
@@ -43,11 +45,14 @@ INSTALLED_APPS = [
 
     'account.apps.AccountConfig',
     'drivers.apps.DriversConfig',
-    'transaction.apps.TransactionConfig'
+    'transaction.apps.TransactionConfig',
+
+    'whitenoise.runserver_nostatic'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -82,14 +87,14 @@ WSGI_APPLICATION = 'bctt.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "bctt",
-        'USER': "default",
-        'PASSWORD': "VDdXmI1ptfM9",
-        'HOST': "ep-little-silence-a166z71m-pooler.ap-southeast-1.aws.neon.tech",
-        'PORT': "5432",
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default' : dj_database_url.config() 
+# }
 
 
 # Password validation
@@ -128,11 +133,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = '/staticfiles/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static')
 ]
-STATIC_ROOT = join(BASE_DIR, "staticfiles_build", "static")
+
 LOGIN_URL = '/account/login'
 
 # Default primary key field type
