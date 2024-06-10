@@ -55,7 +55,7 @@ def getQr(request):
             context['first_name'] = data[0].first_name
             context['last_name'] = data[0].last_name
             context['plate_number'] = data[0].plate_number
-            context['rate'] = data[0].rate
+            context['status'] = data[0].status
             context['op_first_name'] = data[0].operator.operator_first_name
             context['op_last_name'] = data[0].operator.operator_last_name
             context['address'] = data[0].operator.operator_address
