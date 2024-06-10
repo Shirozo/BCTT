@@ -18,7 +18,7 @@ class Driver(models.Model):
     plate_number = models.CharField(max_length=10, null=False, unique=True)
     vhs = models.IntegerField(default=1)
     rate = models.PositiveIntegerField(default=1)
-    balance = models.PositiveIntegerField(default=0)
+    status = models.CharField(max_length=10, null=True, blank=True, default="unpaid")
     operator = models.ForeignKey(Operator, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self) -> str:
