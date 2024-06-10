@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-k4t989&j13qau!(sgknt(6nf!e511&xsh2%h24mu)y!=v6g_p-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.now.sh', ".vercel.app", "*"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -89,12 +89,13 @@ WSGI_APPLICATION = 'bctt.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bctt',
+        'HOST': '127.0.0.1',
+        'USER': 'bctt',
+        'PASSWORD': 'bctt'
     }
 }
-
-DATABASES['default'] = dj_database_url.config(ssl_require=True)
 
 
 # Password validation
@@ -133,13 +134,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/staticfiles/'
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    join(BASE_DIR, 'static')
 ]
-
 LOGIN_URL = '/account/login'
 
 # Default primary key field type
