@@ -7,207 +7,219 @@
 
 {% block content %}
 
-    <!-- Header -->
-    <div class="header bg-gradient-primary pb-8 pt-5">
-      <div class="container-fluid">
-        <!-- HTML !-->
-        <div class="header-body">
-          <!-- Card stats -->
-          <div class="row">
-            <div class="col-xl-3 col-lg-6">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">{{header}} Drivers</h5>
-                      <span class="h2 font-weight-bold mb-0">{{count}}</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                        <i class="fa fa-bus"></i>
-                      </div>
-                    </div>
+<!-- Header -->
+<div class="header bg-gradient-primary pb-8 pt-5">
+  <div class="container-fluid">
+    <!-- HTML !-->
+    <div class="header-body">
+      <!-- Card stats -->
+      <div class="row">
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">{{header}} Drivers</h5>
+                  <span class="h2 font-weight-bold mb-0">{{count}}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                    <i class="fa fa-bus"></i>
                   </div>
-                  <p class="mt-3 mb-0 text-muted text-sm">
-                    <span class="text-success mr-2"></span>
-                  </p>
                 </div>
               </div>
+              <p class="mt-3 mb-0 text-muted text-sm">
+                <span class="text-success mr-2"></span>
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="container-fluid mt--7">
+<div class="container-fluid mt--7">
 
-      <div class="row">
-        <div class="col">
-          <div class="card shadow">
-            <div class="card-header bg-transparent">
-              <h3 class="mb-0" style="float: left;">{{header}}</h3>
-              <a href="#addDriver" data-toggle="modal" class="button-34">Add New</a>
-            </div>
-            <div style="padding: 1%;">
-              <table id="example" class="table table-striped" width="100%">
-                <thead>
-                  <tr>
-                    <th class="th-sm">Driver</th>
-                    <th>Operator</th>
-                    <th>Body Number</th>
-                    <th>Balance</th>
-                    <th class="th-sm">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for d in drivers %}
-                    <tr>
-                      <td>{{d}}</td>
-                      <td>{{d.operator}}</td>
-                      <td>{{d.plate_number}}</td>
-                      <td>{{d.balance}}</td>
-                      <td>
-                        <button class='btn btn-primary btn-sm edit btn-flat' onclick="editData('{{d.id}}')"'><i class='fa fa-edit'></i>Edit</button>
-                        <button class='btn btn-primary btn-sm edit btn-flat' onclick="getQr('{{d.id}}')"><i class='fa fa-eye'></i> View</button>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-          </div>
-          </div>
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" style="float: left;">{{header}}</h3>
+          <a href="#addDriver" data-toggle="modal" class="button-34">Add New</a>
+        </div>
+        <div style="padding: 1%;">
+          <table id="example" class="table table-striped" width="100%">
+            <thead>
+              <tr>
+                <th class="th-sm">Driver</th>
+                <th>Operator</th>
+                <th>Body Number</th>
+                <th>Balance</th>
+                <th class="th-sm">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for d in drivers %}
+              <tr>
+                <td>{{d}}</td>
+                <td>{{d.operator}}</td>
+                <td>{{d.plate_number}}</td>
+                <td>{{d.balance}}</td>
+                <td>
+                  <button class='btn btn-primary btn-sm edit btn-flat' onclick="editData('{{d.id}}')"'><i class=' fa
+                    fa-edit'></i>Edit</button>
+                  <button class='btn btn-primary btn-sm edit btn-flat' onclick="getQr('{{d.id}}')"><i
+                      class='fa fa-eye'></i> View</button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-    
-    <div class="modal fade" id="addDriver">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            Add New Driver
-          </div>
-          <div class="modal-body">
-            <form class="form-horizontal" method="POST" action="{% url 'tryc' %}">
-              {% csrf_token %}
-              <b>Driver Form</b>
-                {% for i in driverform %}
-                  <div class="form-group has-feedback">
-                    <span class="text-danger">{{i.errors}}</span>
-                    {{i.label_tag}}
-                    {{i}}
-                  </div>
-                {% endfor %}
-              <b>Operator Form</b>
-                {% for o in operatorForm %}
-                  <div class="form-group has-feedback">
-                    <span class="text-danger">{{o.errors}}</span>
-                    {{o.label_tag}}
-                    {{o}}
-                  </div>
-                {% endfor %}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-            <button type="submit" class="btn btn-success btn-flat" name="add"><i class="fa fa-save"></i> Save</button>
-          </div></form>
-        </div>
-      </div>
-    </div>
+  </div>
+</div>
 
-    <div class="modal fade" id="editData">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            Edit Driver Data
-          </div>
-          <div class="modal-body">
-            <form class="form-horizontal" method="POST" action="{% url 'update' %}">
-              {% csrf_token %}
-              <input type="hidden" name="rdr" id="rdr" value="{{header}}">
-              <input type="hidden" name="id" id="id">
-                <b>Driver Data</b>
-                  <div class="form-group has-feedback">
-                    <span class="text-danger"></span>
-                    <label for="id_edit_first_name">First name:</label>
-                    <input type="text" name="first_name" maxlength="50" class="form-control" required id="id_edit_first_name">
-                  </div>
-                  
-                  <div class="form-group has-feedback">
-                    <span class="text-danger"></span>
-                    <label for="id_edit_last_name">Last name:</label>
-                    <input type="text" name="last_name" maxlength="50" class="form-control" required id="id_edit_last_name">
-                  </div>
-                  
-                  <div class="form-group has-feedback">
-                    <span class="text-danger"></span>
-                    <label for="id_edit_plate_number">Plate number:</label>
-                    <input type="text" name="plate_number" maxlength="10" class="form-control" required id="id_edit_plate_number">
-                  </div>
-                  
-                  <div class="form-group has-feedback">
-                    <span class="text-danger"></span>
-                    <label for="id_edit_rate">Rate:</label>
-                    <input type="number" name="rate" value="1" min="0" class="form-control" required id="id_edit_rate">
-                  </div>
-                  
-                <b>Operator Data</b>
-                  <div class="form-group has-feedback">
-                    <span class="text-danger"></span>
-                    <label for="id_edit_op_first_namee">First name:</label>
-                    <input type="text" name="operator_first_name" maxlength="50" class="form-control" required id="id_edit_op_first_namee">
-                  </div>
-                  
-                  <div class="form-group has-feedback">
-                    <span class="text-danger"></span>
-                    <label for="id_edit_op_last_name">Last name:</label>
-                    <input type="text" name="operator_last_name" maxlength="50" class="form-control" required id="id_edit_op_last_name">
-                  </div>
-                  
-                  <div class="form-group has-feedback">
-                    <span class="text-danger"></span>
-                    <label for="id_edit_address">Address:</label>
-                    <input type="text" name="operator_address" maxlength="100" class="form-control" required id="id_edit_address">
-                  </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-flat pull-left" id="closeModal"><i class="fa fa-close"></i> Close</button>
-            <button type="submit" class="btn btn-success btn-flat" name="edit"><i class="fa fa-check-square-o"></i> Update</button>
-            </form>
-        </div>
-        </div>
+<div class="modal fade" id="addDriver">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        Add New Driver
       </div>
+      <div class="modal-body">
+        <form class="form-horizontal" method="POST" action="{% url 'tryc' %}">
+          {% csrf_token %}
+          <b>Driver Form</b>
+          {% for i in driverform %}
+          <div class="form-group has-feedback">
+            <span class="text-danger">{{i.errors}}</span>
+            {{i.label_tag}}
+            {{i}}
+          </div>
+          {% endfor %}
+          <b>Operator Form</b>
+          {% for o in operatorForm %}
+          <div class="form-group has-feedback">
+            <span class="text-danger">{{o.errors}}</span>
+            {{o.label_tag}}
+            {{o}}
+          </div>
+          {% endfor %}
       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i>
+          Close</button>
+        <button type="submit" class="btn btn-success btn-flat" name="add"><i class="fa fa-save"></i> Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editData">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        Edit Driver Data
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" method="POST" action="{% url 'update' %}">
+          {% csrf_token %}
+          <input type="hidden" name="rdr" id="rdr" value="{{header}}">
+          <input type="hidden" name="id" id="id">
+          <b>Driver Data</b>
+          <div class="form-group has-feedback">
+            <span class="text-danger"></span>
+            <label for="id_edit_first_name">First name:</label>
+            <input type="text" name="first_name" maxlength="50" class="form-control" required id="id_edit_first_name">
+          </div>
+
+          <div class="form-group has-feedback">
+            <span class="text-danger"></span>
+            <label for="id_edit_last_name">Last name:</label>
+            <input type="text" name="last_name" maxlength="50" class="form-control" required id="id_edit_last_name">
+          </div>
+
+          <div class="form-group has-feedback">
+            <span class="text-danger"></span>
+            <label for="id_edit_plate_number">Plate number:</label>
+            <input type="text" name="plate_number" maxlength="10" class="form-control" required
+              id="id_edit_plate_number">
+          </div>
+
+          <div class="form-group has-feedback">
+            <span class="text-danger"></span>
+            <label for="id_edit_rate">Rate:</label>
+            <input type="number" name="rate" value="1" min="0" class="form-control" required id="id_edit_rate">
+          </div>
+
+          <b>Operator Data</b>
+          <div class="form-group has-feedback">
+            <span class="text-danger"></span>
+            <label for="id_edit_op_first_namee">First name:</label>
+            <input type="text" name="operator_first_name" maxlength="50" class="form-control" required
+              id="id_edit_op_first_namee">
+          </div>
+
+          <div class="form-group has-feedback">
+            <span class="text-danger"></span>
+            <label for="id_edit_op_last_name">Last name:</label>
+            <input type="text" name="operator_last_name" maxlength="50" class="form-control" required
+              id="id_edit_op_last_name">
+          </div>
+
+          <div class="form-group has-feedback">
+            <span class="text-danger"></span>
+            <label for="id_edit_address">Address:</label>
+            <input type="text" name="operator_address" maxlength="100" class="form-control" required
+              id="id_edit_address">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-flat pull-left" id="closeModal"><i class="fa fa-close"></i>
+          Close</button>
+        <button type="submit" class="btn btn-success btn-flat" name="edit"><i class="fa fa-check-square-o"></i>
+          Update</button>
+        </form>
       </div>
     </div>
-    <div class="modal fade" id="qrimage" tabindex="-1" aria-labelledby="qrimage" aria-hidden="true">
-      <div class="modal-dialog modal-lg" style="width: 28dvw;">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="receiptModalLabel">Driver Details</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="qrimage" tabindex="-1" aria-labelledby="qrimage" aria-hidden="true">
+  <div class="modal-dialog modal-lg" style="width: 28dvw;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="receiptModalLabel">Driver Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex;">
+          <div style="width: 50%;">
+            <b>Driver Data</b>
+            <p id="driver_name"></p>
+            <p id="plate_number"></p>
           </div>
-          <div class="modal-body">
-            <div style="display: flex;">
-              <div style="width: 50%;">
-                <b>Driver Data</b>
-                <p id="driver_name"></p>
-                <p id="plate_number"></p>
-              </div>
-              <div style="width: 50%;">
-                <b>Operator Data</b>
-                <p id="op_name"></p>
-                <p id="p_addr"></p>
-              </div>
-            </div>
-            <img id="qrimageid" width="450px">
+          <div style="width: 50%;">
+            <b>Operator Data</b>
+            <p id="op_name"></p>
+            <p id="p_addr"></p>
           </div>
         </div>
+        <b>Status: </b>
+        <b id="status" style="width:fit-content; padding: 2% 2%"></b>
+        <img id="qrimageid" width="450px">
       </div>
     </div>
+  </div>
+</div>
 
 {% endblock content %}
 
-<!-- Specific JS goes HERE --> 
+<!-- Specific JS goes HERE -->
 {% block javascripts %}
 
 <script src="/staticfiles/assets/vendor/clipboard/dist/clipboard.min.js"></script>
@@ -221,14 +233,14 @@
   })
 
   function getCookie(c_name) {
-    if(document.cookie.length > 0) {
-        c_start = document.cookie.indexOf(c_name + "=");
-        if(c_start != -1) {
-            c_start = c_start + c_name.length + 1;
-            c_end = document.cookie.indexOf(";", c_start);
-            if(c_end == -1) c_end = document.cookie.length;
-            return unescape(document.cookie.substring(c_start,c_end));
-        }
+    if (document.cookie.length > 0) {
+      c_start = document.cookie.indexOf(c_name + "=");
+      if (c_start != -1) {
+        c_start = c_start + c_name.length + 1;
+        c_end = document.cookie.indexOf(";", c_start);
+        if (c_end == -1) c_end = document.cookie.length;
+        return unescape(document.cookie.substring(c_start, c_end));
+      }
     }
     return "";
   }
@@ -236,38 +248,45 @@
   function displayImage(imageData) {
     // Convert image data to a data URL
     const imageURL = `data:image/jpeg;base64,${imageData}`;
-  
+
     // Create an img element
     const imgElement = document.getElementById('qrimageid');
-  
+
     // Set the source of the image
     imgElement.src = imageURL;
-  
+
     // Find the modal body element
 
-  
+
     // Show the QR image modal
     $("#qrimage").modal("show");
   }
 
-  function getQr(id){
+  function getQr(id) {
     $.ajax({
       type: "POST",
-      url : '{% url "getQr" %}',
+      url: '{% url "getQr" %}',
       headers: {
         "X-CSRFToken": getCookie("csrftoken")
       },
-      data : {
-        id : id,
+      data: {
+        id: id,
       },
-      dataType : 'json',
-      success: function(response) {
+      dataType: 'json',
+      success: function (response) {
         image_data = response.data
         displayImage(image_data)
         $("#driver_name").html(`Name: ${response.last_name}, ${response.first_name}`)
         $("#plate_number").html(`Plate Number: ${response.plate_number}`)
         $("#op_name").html(`Name: ${response.op_last_name}, ${response.op_first_name}`)
         $("#p_addr").html(`Address: ${response.address}`)
+        $("#status").html(response.status)
+        if (response.status === "paid") {
+          $("#status").css("background-color", "#04c42e")
+        }
+        else {
+          $("#status").css("background-color", "#f7362f")
+        }
       }
     })
   }
@@ -275,15 +294,15 @@
   function editData(id) {
     $.ajax({
       type: "POST",
-      url : '{% url "getQr" %}',
+      url: '{% url "getQr" %}',
       headers: {
         "X-CSRFToken": getCookie("csrftoken")
       },
-      data : {
-        id : id,
+      data: {
+        id: id,
       },
-      dataType : 'json',
-      success: function(response) {
+      dataType: 'json',
+      success: function (response) {
         $("#id_edit_first_name").val(response.first_name)
         $("#id_edit_last_name").val(response.last_name)
         $("#id_edit_plate_number").val(response.plate_number)
