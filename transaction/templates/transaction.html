@@ -7,123 +7,129 @@
 
 {% block content %}
 
-    <!-- Header -->
-    <div class="header bg-gradient-primary pb-8 pt-5">
-      <div class="container-fluid">
-        <!-- HTML !-->
-        <div class="header-body">
-          <!-- Card stats -->
-          <div class="row">
-            <div class="col-xl-3 col-lg-6">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Transaction Count</h5>
-                      <span class="h2 font-weight-bold mb-0">{{count}}</span>
-                    </div>
-                    
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                        <i class="fa fa-layer-group"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="mt-3 mb-0 text-muted text-sm">
-                    <span class="text-success mr-2"></span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Transaction Amount</h5>
-                      <span class="h2 font-weight-bold mb-0">{{total}}</span>
-                    </div>
-                    
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                        <i class="fa fa-dollar"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="mt-3 mb-0 text-muted text-sm">
-                    <span class="text-success mr-2"></span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container-fluid mt--7">
-
+<!-- Header -->
+<div class="header bg-gradient-primary pb-8 pt-5">
+  <div class="container-fluid">
+    <!-- HTML !-->
+    <div class="header-body">
+      <!-- Card stats -->
       <div class="row">
-        <div class="col">
-          <div class="card shadow">
-            <div class="card-header bg-transparent">
-              <h3 class="mb-0" style="float: left;">Transaction</h3>
-              <a href="#addTransac" data-toggle="modal" class="button-34">Add New</a>
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Transaction Count</h5>
+                  <span class="h2 font-weight-bold mb-0">{{count}}</span>
+                </div>
+
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                    <i class="fa fa-layer-group"></i>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 mb-0 text-muted text-sm">
+                <span class="text-success mr-2"></span>
+              </p>
             </div>
-            <div style="padding: 1%;">
-              <table id="example" class="table table-striped" width="100%">
-                <thead>
-                  <tr>
-                    <th>Body Number</th>
-                    <th>Endpoint</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for t in transact %}
-                    <tr>
-                      <td>{{t.driver.plate_number}}</td>
-                      <td>{{t.endpoint}}</td>
-                      <td>{{t.amount}}</td>
-                      <td>{{t.scanDate}}</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
           </div>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Transaction Amount</h5>
+                  <span class="h2 font-weight-bold mb-0">{{total}}</span>
+                </div>
+
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                    <i class="fa fa-dollar"></i>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 mb-0 text-muted text-sm">
+                <span class="text-success mr-2"></span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
+<div class="container-fluid mt--7">
 
-    <div class="modal fade" id="addTransac">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            Transaction
-          </div>
-          <div class="modal-body">
-            <form class="form-horizontal" method="GET" action="/scan/">
-              {% csrf_token %}
-              <b>Code:</b>
-              <input type="text" name="data" id="data" class="form-control">
-              <input type="hidden" name="endpoint" id="endpoint" value="pepelitan">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-            <button type="submit" class="btn btn-success btn-flat" name="add"><i class="fa fa-save"></i> Save</button>
-          </div></form>
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" style="float: left;">Transaction</h3>
+          <a href="#addTransac" data-toggle="modal" class="button-34">Add New</a>
+        </div>
+        <div style="padding: 1%;">
+          <table id="example" class="table table-striped" width="100%">
+            <thead>
+              <tr>
+                <th>Body Number</th>
+                <th>Endpoint</th>
+                <th>Action</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for t in transact %}
+              <tr>
+                <td>{{t.driver.plate_number}}</td>
+                <td>{{t.endpoint}}</td>
+                <td>{{t.action}}</td>
+                <td>{{t.scanDate}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-    
+  </div>
+</div>
+
+
+<div class="modal fade" id="addTransac">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        Transaction
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" method="GET" action="{% url 'scan' %}">
+          {% csrf_token %}
+          <b>Code:</b>
+          <input type="text" name="data" id="data" class="form-control">
+          <input type="radio" id="pay" name="action" value="pay">
+          <label for="html">Pay</label><br>
+          <input type="radio" id="css" name="action" value="pass">
+          <label for="css">Scan</label><br>
+          <input type="hidden" name="endpoint" id="endpoint" value="pepelitan">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i>
+          Close</button>
+        <button type="submit" class="btn btn-success btn-flat" name="add"><i class="fa fa-save"></i> Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 
 {% endblock content %}
 
-<!-- Specific JS goes HERE --> 
+<!-- Specific JS goes HERE -->
 {% block javascripts %}
 
 <script src="/staticfiles/assets/vendor/clipboard/dist/clipboard.min.js"></script>
@@ -131,12 +137,12 @@
   $(document).ready(() => {
     $("#example").DataTable({
       responsive: true,
-      "order" : [
+      "order": [
         [3, 'desc']
-     ],
-     "columnDefs": [
-     {"className": "dt-center", "targets": "_all"},
-    ],
+      ],
+      "columnDefs": [
+        { "className": "dt-center", "targets": "_all" },
+      ],
     })
   })
 
