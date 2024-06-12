@@ -108,11 +108,8 @@
         <form class="form-horizontal" method="GET" action="{% url 'scan' %}">
           {% csrf_token %}
           <b>Code:</b>
-          <input type="text" name="data" id="data" class="form-control">
-          <input type="radio" id="pay" name="action" value="pay">
-          <label for="html">Pay</label><br>
-          <input type="radio" id="css" name="action" value="pass">
-          <label for="css">Scan</label><br>
+          <input type="text" name="data" id="data" class="form-control" oninput="show_code()">
+          <div id="driver_data"></div>
           <input type="hidden" name="endpoint" id="endpoint" value="pepelitan">
       </div>
       <div class="modal-footer">
@@ -132,7 +129,7 @@
 <!-- Specific JS goes HERE -->
 {% block javascripts %}
 
-<script src="/staticfiles/assets/vendor/clipboard/dist/clipboard.min.js"></script>
+<script src="/static/assets/vendor/clipboard/dist/clipboard.min.js"></script>
 <script>
   $(document).ready(() => {
     $("#example").DataTable({
@@ -145,6 +142,66 @@
       ],
     })
   })
+
+  function displayImage(imageData) {
+    // Convert image data to a data URL
+    const imageURL = `data:image/jpeg;base64,${imageData}`;
+
+    // Create an img element
+    const imgElement = document.getElementById('qrimageid');
+
+    // Set the source of the image
+    imgElement.src = imageURL;
+  }
+
+  function show_code() {
+    qr = $("#data").val()
+    $.ajax({
+      type: "GET",
+      url: '{% url "getQr" %}',
+      data: {
+        id: qr,
+        qr: true
+      },
+      dataType: 'json',
+      success: function (response) {
+        html = `
+          <div style="display: flex;">
+            <div style="width: 50%;">
+              <b>Driver Data</b>
+              <p>Name: ${response.last_name}, ${response.first_name}</p>
+              <p>Plate Number: ${response.plate_number}</p>
+            </div>
+            <div style="width: 50%;">
+              <b>Operator Data</b>
+              <p>Name: ${response.op_last_name}, ${response.op_first_name}</p>
+              <p>Address: ${response.address}</p>
+            </div>
+          </div>
+        `
+
+        if (response.code === 200) {
+          if (response.status === "paid") {
+            html += `
+                  <b style="width: fit-content; padding: 2% 2%; background-color:green; border-radius: .8em;margin-bottom: 5px; color:black;" >PAID</b>
+                  <input type="radio" id="css" name="action" value="pass">
+                  <label for="css">Scan</label>`
+          }
+          else {
+            html += `
+                  <b style="width: fit-content; padding: 2% 2%; background-color:red; border-radius: .8em; margin-bottom: 5px;color:black;">UNPAID</b>
+                  <br>
+                  <br>
+                  <input type="radio" id="pay" name="action" value="pay">
+                  <label for="html">Pay</label>`
+          }
+        }
+        document.getElementById("driver_data").innerHTML = html
+      }
+    })
+  }
+
+
 
 </script>
 {% endblock javascripts %}

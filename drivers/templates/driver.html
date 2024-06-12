@@ -217,12 +217,13 @@
   </div>
 </div>
 
+
 {% endblock content %}
 
 <!-- Specific JS goes HERE -->
 {% block javascripts %}
 
-<script src="/staticfiles/assets/vendor/clipboard/dist/clipboard.min.js"></script>
+<script src="/static/assets/vendor/clipboard/dist/clipboard.min.js"></script>
 <script>
   $(document).ready(() => {
     new DataTable('#example');
@@ -264,11 +265,8 @@
 
   function getQr(id) {
     $.ajax({
-      type: "POST",
+      type: "GET",
       url: '{% url "getQr" %}',
-      headers: {
-        "X-CSRFToken": getCookie("csrftoken")
-      },
       data: {
         id: id,
       },

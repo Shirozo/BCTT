@@ -46,31 +46,39 @@ def tricycle(request):
 @login_required
 def getQr(request):
     context = {}
-    if request.method == "POST":
-        id = request.POST.get("id")
-        data = Driver.objects.filter(id=id)
-        if data.exists():
-            file_path = data[0].qr_code
-
-            context['first_name'] = data[0].first_name
-            context['last_name'] = data[0].last_name
-            context['plate_number'] = data[0].plate_number
-            context['status'] = data[0].status
-            context['op_first_name'] = data[0].operator.operator_first_name
-            context['op_last_name'] = data[0].operator.operator_last_name
-            context['address'] = data[0].operator.operator_address
-            context['id'] = data[0].pk
-
-            with open(file_path, 'rb') as image_file:
-                image_data = image_file.read()
-                # Encode the binary data as base64 string
-                base64_encoded_data = base64.b64encode(image_data).decode('utf-8')
-                context["data"] = base64_encoded_data
-                context["code"] = 200   
+    id = request.GET.get("id")
+    qr = request.GET.get("qr")
+    if qr:
+        qr_data = id.split("-")
+        if len(qr_data) == 3:
+            id = qr_data[0]
+        
         else:
-            context['code'] = 404
+            context["code"] = 404
+            return JsonResponse(context)
+
+    data = Driver.objects.filter(id=id)
+    if data.exists():
+        file_path = data[0].qr_code
+
+        context['first_name'] = data[0].first_name
+        context['last_name'] = data[0].last_name
+        context['plate_number'] = data[0].plate_number
+        context['status'] = data[0].status
+        context['op_first_name'] = data[0].operator.operator_first_name
+        context['op_last_name'] = data[0].operator.operator_last_name
+        context['address'] = data[0].operator.operator_address
+        context['id'] = data[0].pk
+
+        with open(file_path, 'rb') as image_file:
+            image_data = image_file.read()
+            # Encode the binary data as base64 string
+            base64_encoded_data = base64.b64encode(image_data).decode('utf-8')
+            context["data"] = base64_encoded_data
+            context["code"] = 200   
     else:
-        context['code'] = 403
+        context['code'] = 404
+
 
     return JsonResponse(context)
 
