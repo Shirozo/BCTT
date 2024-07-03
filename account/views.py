@@ -6,10 +6,11 @@ from django.contrib import messages
 # Create your views here.
 def loginPage(request):
     if request.user.is_authenticated:
-        return render(request, ".html")
-
+        return redirect(reverse("transac"))
     else:
+
         if request.method == "POST":
+
             forms  = AuthenticationForm(request,request.POST)
             print(forms)
             username = forms.cleaned_data.get("username")
@@ -23,6 +24,7 @@ def loginPage(request):
             messages.error(request, "Invalid Username or Password!")
         else:
             forms = AuthenticationForm()
+        
         return render(request, "login.html", context={"forms" : forms})
 
 

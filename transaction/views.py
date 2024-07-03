@@ -5,7 +5,7 @@ from drivers.models import Driver
 from .models import Transaction, DriverScan
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import Sum, Q
 # Create your views here.
 
 # @login_required
@@ -40,67 +40,72 @@ def scanQr(request):
     context = {}
     data = request.GET.get("data")
     action = request.GET.get("action")
-    try:
-        id, plate_number, _ = data.split("-")
-        endpoint = request.GET.get("endpoint")
-    except Exception:
-        context['code'] = 500
-        context['message'] = "Invalid QR Code!"
-        messages.error(request, "Invalid QR Code!")
+    if not action:
+        context["code"] = 403
+        context["message"] = "Invalid Action!"
+        messages.error(request, "Invalid Action!")
     else:
-        
-        if not endpoint:
-            context["code"] = 405
-            context["message"] = "Invalid QR Code!"
+        try:
+            id, plate_number, _ = data.split("-")
+            endpoint = request.GET.get("endpoint")
+        except Exception:
+            context['code'] = 500
+            context['message'] = "Invalid QR Code!"
             messages.error(request, "Invalid QR Code!")
-        
         else:
-            has_data = Driver.objects.filter(id=id, plate_number=plate_number)
-
             
-            if has_data.exists():
+            if not endpoint:
+                context["code"] = 405
+                context["message"] = "Invalid QR Code!"
+                messages.error(request, "Invalid QR Code!")
+            
+            else:
+                has_data = Driver.objects.filter(id=id, plate_number=plate_number)
+
                 
-                driver_data = has_data[0]
+                if has_data.exists():
+                    
+                    driver_data = has_data[0]
 
-                if action.strip() == "pay":
-                    if driver_data.status == "unpaid":
-                        transact_detail = DriverScan(driver=driver_data, action="Pay")
-                        transact_detail.save()
+                    if action.strip() == "pay":
+                        if driver_data.status == "unpaid":
+                            transact_detail = DriverScan(driver=driver_data, action="Pay")
+                            transact_detail.save()
 
-                        has_data.update(status = "paid")
-                        context['code'] = 200
-                        context['plate_number'] = driver_data.plate_number
-                        context['message'] = "Transaction Success!"
-                        messages.success(request, "Transaction Success!")
+                            has_data.update(status = "paid")
+                            context['code'] = 200
+                            context['plate_number'] = driver_data.plate_number
+                            context['message'] = "Transaction Success!"
+                            messages.success(request, "Transaction Success!")
+                        else:
+                            context['code'] = 403
+                            context['message'] = "Already scanned!"
+                            messages.error(request, "Already scanned!")
+                    
+                    elif action.strip() == "pass":
+                        if driver_data.status == "paid":
+                            transact_detail = DriverScan(driver=driver_data, endpoint=endpoint, action="Scanned")
+                            transact_detail.save()
+
+                            has_data.update(status = "unpaid")
+                            context['code'] = 200
+                            context['plate_number'] = driver_data.plate_number
+                            context['message'] = "Transaction Success!"
+                            messages.success(request, "Transaction Success!")
+                        else:
+                            context['code'] = 403
+                            context['message'] = "Driver didn't pay!"
+                            messages.error(request, "Driver didn't pay!")
+                    
                     else:
-                        context['code'] = 403
-                        context['message'] = "Already scanned!"
-                        messages.error(request, "Already scanned!")
-                
-                elif action.strip() == "pass":
-                    if driver_data.status == "paid":
-                        transact_detail = DriverScan(driver=driver_data, endpoint=endpoint, action="Scanned")
-                        transact_detail.save()
+                        context['code'] = 404
+                        context["message"] = "Driver Details not Found"
+                        messages.error(request, "Driver Details not Found")
 
-                        has_data.update(status = "unpaid")
-                        context['code'] = 200
-                        context['plate_number'] = driver_data.plate_number
-                        context['message'] = "Transaction Success!"
-                        messages.success(request, "Transaction Success!")
-                    else:
-                        context['code'] = 403
-                        context['message'] = "Driver didn't pay!"
-                        messages.error(request, "Driver didn't pay!")
-                
                 else:
                     context['code'] = 404
                     context["message"] = "Driver Details not Found"
                     messages.error(request, "Driver Details not Found")
-
-            else:
-                context['code'] = 404
-                context["message"] = "Driver Details not Found"
-                messages.error(request, "Driver Details not Found")
 
 
     return redirect(reverse("transac"))
@@ -113,3 +118,20 @@ def transactions(request):
         "count" : transact.count(),
     }
     return render(request, "transaction.html", context)
+
+def driver_exist(request):
+    context = {}
+    qr = request.GET.get("qr")
+    try:
+        id, plate_number, _ = qr.split("-")
+    except Exception:
+        context["code"] = 403
+    else:
+        data = Driver.objects.filter(plate_number=plate_number).filter(id=id)
+            
+        if data.exists and len(data) > 0:
+            context["code"] = 200
+        else:
+            context["code"] = 403
+            
+    return JsonResponse(context)
