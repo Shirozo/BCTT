@@ -1,10 +1,15 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from .models import CustomUser
 
 class RegisterForm(UserCreationForm):
     username = forms.CharField(max_length=50)
     
     class Meta:
-        model = User
-        fields = ["username", "password1", "password2"]
+        model = CustomUser
+        fields = ["username", "password1", "password2", "designation"]
+        widgets = {
+            "designation" : forms.Select(attrs={
+                "class" : "form-control"
+            }),
+        }

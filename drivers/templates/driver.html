@@ -67,9 +67,9 @@
                 <td>{{d.plate_number}}</td>
                 <td>{{d.balance}}</td>
                 <td>
-                  <button class='btn btn-primary btn-sm edit btn-flat' onclick="editData('{{d.id}}')"'><i class=' fa
+                  <button class='btn btn-primary btn-sm edit btn-flat' onclick="editData('{{d.id}}', '{{d.plate_number}}')"><i class=' fa
                     fa-edit'></i>Edit</button>
-                  <button class='btn btn-primary btn-sm edit btn-flat' onclick="getQr('{{d.id}}')"><i
+                  <button class='btn btn-primary btn-sm edit btn-flat' onclick="getQr('{{d.id}}', '{{d.plate_number}}')"><i
                       class='fa fa-eye'></i> View</button>
                 </td>
               </tr>
@@ -263,12 +263,13 @@
     $("#qrimage").modal("show");
   }
 
-  function getQr(id) {
+  function getQr(id, plate_number) {
     $.ajax({
       type: "GET",
       url: '{% url "getQr" %}',
       data: {
         id: id,
+        plate_number : plate_number
       },
       dataType: 'json',
       success: function (response) {
@@ -289,18 +290,20 @@
     })
   }
 
-  function editData(id) {
+  function editData(id, plate_number) {
     $.ajax({
-      type: "POST",
+      type: "GET",
       url: '{% url "getQr" %}',
       headers: {
         "X-CSRFToken": getCookie("csrftoken")
       },
       data: {
         id: id,
+        plate_number : plate_number
       },
       dataType: 'json',
       success: function (response) {
+        console.log(response)
         $("#id_edit_first_name").val(response.first_name)
         $("#id_edit_last_name").val(response.last_name)
         $("#id_edit_plate_number").val(response.plate_number)

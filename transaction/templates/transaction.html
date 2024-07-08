@@ -19,34 +19,19 @@
             <div class="card-body">
               <div class="row">
                 <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Transaction Count</h5>
-                  <span class="h2 font-weight-bold mb-0">{{count}}</span>
+                  <h5 class="card-title text-uppercase text-muted mb-0">
+                    {% if request.user.designation == 1 or request.user.is_superuser%}
+                      Transaction Count
+                    {% else %}
+                      Paid Driver
+                    {% endif %}
+                  </h5>
+                  <span class="h2 font-weight-bold mb-0" id="t_count">{{count}}</span>
                 </div>
 
                 <div class="col-auto">
                   <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
                     <i class="fa fa-layer-group"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <span class="text-success mr-2"></span>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Transaction Amount</h5>
-                  <span class="h2 font-weight-bold mb-0">{{total}}</span>
-                </div>
-
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                    <i class="fa fa-dollar"></i>
                   </div>
                 </div>
               </div>
@@ -99,24 +84,31 @@
 </div>
 
 
-<div class="modal fade" id="addTransac">
+<div class="modal fade" id="addTransac" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         Transaction
       </div>
       <div class="modal-body">
-        <form class="form-horizontal" method="GET" action="{% url 'scan' %}">
+        <form class="form-horizontal" method="GET" action="#" id="send_data1">
           {% csrf_token %}
           <b>Code:</b>
           <input type="text" name="data" id="data" class="form-control" oninput="show_code()">
           <div id="driver_data"></div>
-          <input type="hidden" name="endpoint" id="endpoint" value="pepelitan">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i>
+        <button type="button" class="btn btn-danger s1-b1-c btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i>
           Close</button>
-        <button type="submit" class="btn btn-success btn-flat" name="add"><i class="fa fa-save"></i> Save</button>
+        <button type="submit" class="btn btn-success s1-b1-s btn-flat" name="add">
+          <i class="fa fa-save" id="save1"></i> 
+          <i class="lds-dual-ring" id="load1" style="display: none;"></i>
+          {% if request.user.designation == 1 %} 
+          Pay
+          {% else %} 
+          Scan
+          {% endif %}
+        </button>
       </div>
       </form>
     </div>
@@ -124,24 +116,31 @@
 </div>
 
 
-<div class="modal fade" id="bcode">
+<div class="modal fade" id="bcode" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         Transaction
       </div>
       <div class="modal-body">
-        <form class="form-horizontal" method="GET" action="{% url 'scan' %}">
+        <form class="form-horizontal" method="GET" action="#" id="send_data">
           {% csrf_token %}
           <b id="code_show">Code:</b>
           <input type="hidden" name="data" id="bcode_data" class="form-control">
           <div id="driver_data_bcode"></div>
-          <input type="hidden" name="endpoint" id="endpoint" value="pepelitan">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger btn-flat pull-left" data-dismiss="modal" id="bcode_close"><i class="fa fa-close"></i>
+        <button type="button" class="btn s-b-c btn-danger btn-flat pull-left" data-dismiss="modal" id="bcode_close"><i class="fa fa-close"></i>
           Close</button>
-        <button type="submit" class="btn btn-success btn-flat" name="add"><i class="fa fa-save"></i> Save</button>
+        <button type="submit" class="btn btn-success s-b-s btn-flat" name="add">
+          <i class="fa fa-save" id="save"></i> 
+          <div class="lds-dual-ring" id="load" style="display: none;"></div>
+          {% if request.user.designation == 1 %} 
+          Pay
+          {% else %} 
+          Scan
+          {% endif %}
+        </button>
       </div>
       </form>
     </div>
@@ -158,7 +157,7 @@
 <script src="/static/assets/vendor/clipboard/dist/clipboard.min.js"></script>
 <script>
   $(document).ready(() => {
-    $("#example").DataTable({
+    const table = $("#example").DataTable({
       responsive: true,
       "order": [
         [3, 'desc']
@@ -172,6 +171,156 @@
       e.preventDefault()
       $("#bcode").modal("hide")
     })
+
+    const TransactionSocket = new WebSocket("ws://" + window.location.host + "/");
+    TransactionSocket.onopen = (e) => {
+      console.log("Setup Done")
+    };
+    TransactionSocket.onclose = (e) => {
+      console.log("Something Unexpected Happened!")
+    }
+
+    $("form").on("submit", (e) => {
+      e.preventDefault();
+      let formId = $(e.target).attr("id");
+      if (formId === "send_data") {
+        code_data = $("#bcode_data").val()
+        $(".s-b-c").attr("disabled", true)
+        $(".s-b-s").attr("disabled", true)
+        $("#save").css("display", "none")
+        $("#load").css("display", "inline-block")
+      }
+      else {
+        code_data = $("#data").val()
+        $(".s1-b1-c").attr("disabled", true)
+        $(".s1-b1-s").attr("disabled", true)
+        $("#save1").css("display", "none")
+        $("#load1").css("display", "inline-block")
+      }
+
+      $.ajax({
+        type: "GET",
+        url: "{% url 'scan' %}",
+        data: {
+          data : code_data,
+          designation : "{{ request.user.designation}}"
+        },
+        dataType: 'json',
+        success: function (response) {
+          if (response.code === 200) {
+            TransactionSocket.send(JSON.stringify({
+              code: code_data,
+              action : response.action,
+              transact_id : response.id
+            }))
+
+            if (response.action === "pass") {
+              p_nmbr = code_data.split("-")      
+              p_number = p_nmbr[1]
+              
+              fetch(`{% url "removeshow" %}?id=${p_number}`)
+              .then(response => {
+                if (!response.ok) {
+                  toastr.error("Reload your page!")
+                }
+                else {
+                  return response.json
+                }
+              })
+
+              table.rows().every(function() {
+                var data = this.data();
+                if (data[0] === p_number) {
+                  this.remove();
+                }
+              })
+      
+              table.draw();
+              
+              if ("{{ request.user.designation}}" === "2") {
+                var tag = $("#t_count")
+                var tagValue = parseInt(tag.text())
+                tag.text(tagValue - 1)
+              }
+            }
+
+            else {
+              $.ajax({
+                type: "GET",
+                url : "{% url 'transactAPI' %}",
+                data: {
+                  id : response.id
+                },
+                dataType : "json",
+                success : function (response) {
+                  date = new Date(response.date)
+                  let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+                  table.row.add([
+                    response.body_number,
+                    response.endpoint,
+                    response.action,
+                    date.toLocaleString('en-US', options)
+                  ]).draw()
+                  var tag = $("#t_count")
+                  var tagValue = parseInt(tag.text())
+                  tag.text(tagValue + 1)
+                }
+              })
+            }
+
+            toastr.success(response.action + " Success!")
+          }
+          else {
+            toastr.error(response.message)
+          }
+        }
+      })
+
+
+      if (formId === "send_data") {
+        $(".s-b-c").removeAttr("disabled")
+        $(".s-b-s").removeAttr("disabled")
+        $("#save").css("display", "inline-block")
+        $("#load").css("display", "none")
+      }
+      else {
+        $(".s1-b1-c").removeAttr("disabled")
+        $(".s1-b1-s").removeAttr("disabled")
+        $("#save1").css("display", "inline-block")
+        $("#load1").css("display", "none")
+      }
+    });
+
+    TransactionSocket.onmessage = function(e) {
+      const designation = "{{request.user.designation}}"
+      transact_data = JSON.parse(e.data)
+      plate_number = transact_data.code.split("-")
+      if (+designation === 2 && transact_data.action === "pay") {
+        toastr.success(`Body Number '${plate_number[1]}' has paid at merkado`)
+        $.ajax({
+          type: "GET",
+          url : "{% url 'transactAPI' %}",
+          data: {
+            id : transact_data.transact_id
+          },
+          dataType : "json",
+          success : function (response) {
+            date = new Date(response.date)
+            let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+            table.row.add([
+              response.body_number,
+              response.endpoint,
+              response.action,
+              date.toLocaleString('en-US', options)
+            ]).draw()
+            var tag = $("#t_count")
+            var tagValue = parseInt(tag.text())
+            tag.text(tagValue + 1)
+          }
+        })
+      }
+    }
+    
   })
 
   function displayImage(imageData) {
@@ -214,17 +363,11 @@
         if (response.code === 200) {
           if (response.status === "paid") {
             html += `
-                  <b style="width: fit-content; padding: 2% 2%; background-color:green; border-radius: .8em;margin-bottom: 5px; color:black;" >PAID</b>
-                  <input type="radio" id="css" name="action" value="pass">
-                  <label for="css">Scan</label>`
+                  <b style="width: fit-content; padding: 2% 2%; background-color:green; border-radius: .8em;margin-bottom: 5px; color:black;" >PAID</b>`
           }
           else {
             html += `
-                  <b style="width: fit-content; padding: 2% 2%; background-color:red; border-radius: .8em; margin-bottom: 5px;color:black;">UNPAID</b>
-                  <br>
-                  <br>
-                  <input type="radio" id="pay" name="action" value="pay">
-                  <label for="html">Pay</label>`
+                  <b style="width: fit-content; padding: 2% 2%; background-color:red; border-radius: .8em; margin-bottom: 5px;color:black;">UNPAID</b>`
           }
         }
         id ? document.getElementById("driver_data_bcode").innerHTML = html : document.getElementById("driver_data").innerHTML = html
@@ -268,7 +411,7 @@
           setTimeout(()=> {
             $("#bcode").modal("show")
             show_code(bcode)
-          }, 500)
+          }, 200)
         }
         else {
           toastr.error("Invalid QR Code!")

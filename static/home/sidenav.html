@@ -24,7 +24,15 @@
                 <i class="fa fa-receipt"></i>
                 <span class="nav-link-text">Transaction</span>
               </a>
+            </li>
+            {% if request.user.is_superuser%} 
+            <li class="nav-item">
+              <a class="nav-link {% if 'icons' in segment %} active {% endif %}" href="{% url 'register'%}">
+                <i class="fa fa-users"></i>
+                <span class="nav-link-text">User</span>
+              </a>
             </li>       
+            {% endif %}
         </ul>
       </div>
     </div>

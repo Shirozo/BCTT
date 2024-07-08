@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-k4t989&j13qau!(sgknt(6nf!e511&xsh2%h24mu)y!=v6g_p-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.0.100"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -42,14 +42,16 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'daphne',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
-    'account.apps.AccountConfig',
+    'account',
     'drivers.apps.DriversConfig',
     'transaction.apps.TransactionConfig',
 
-    'whitenoise.runserver_nostatic'
+    'whitenoise.runserver_nostatic',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -82,6 +84,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'bctt.wsgi.application'
+
+ASGI_APPLICATION = "bctt.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 
 # Database
@@ -144,3 +154,4 @@ LOGIN_URL = '/account/login'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'account.CustomUser'

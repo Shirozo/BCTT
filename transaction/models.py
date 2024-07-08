@@ -12,3 +12,4 @@ class DriverScan(models.Model):
     endpoint = models.CharField(max_length=50, null=True)
     scanDate = models.DateTimeField(auto_now=True)
     action = models.CharField(max_length=10, null=True, blank=True)
+    show = models.BooleanField(default=True)

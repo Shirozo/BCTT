@@ -48,16 +48,23 @@ def getQr(request):
     context = {}
     id = request.GET.get("id")
     qr = request.GET.get("qr")
+    plate_number = request.GET.get('plate_number')
     if qr:
         qr_data = id.split("-")
-        if len(qr_data) == 3:
+        if len(qr_data) >= 2:
+            if not qr_data[1]:
+                context["code"] = 403
+                return JsonResponse(context)   
+            
+            plate_number = qr_data[1]
             id = qr_data[0]
         
         else:
-            context["code"] = 404
+            context["code"] = 403
             return JsonResponse(context)
 
-    data = Driver.objects.filter(id=id)
+    print(plate_number)    
+    data = Driver.objects.filter(plate_number=plate_number).filter(id=id)
     if data.exists():
         file_path = data[0].qr_code
 
