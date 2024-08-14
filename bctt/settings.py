@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-k4t989&j13qau!(sgknt(6nf!e511&xsh2%h24mu)y!=v6g_p-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "192.168.1.23"]
 
 
 # Application definition
@@ -102,8 +102,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'bctt',
         'HOST': '127.0.0.1',
-        'USER': 'bctt',
-        'PASSWORD': 'bctt'
+        'USER': 'laravel',
+        'PASSWORD': 'laravel'
     }
 }
 

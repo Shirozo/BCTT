@@ -41,6 +41,7 @@ def scanQr(request):
     context = {}
     data = request.GET.get("data")
     designation = request.GET.get("designation")
+    action = request.GET.get("b_action")
     try:
         id, plate_number, _ = data.split("-")
     except Exception:
@@ -50,11 +51,9 @@ def scanQr(request):
         
         if designation == "1":
             endpoint = "Merkado"
-            action = "pay"
         
         elif designation == "2":
             endpoint = "Pepelitan"
-            action = "pass"
         else:
             context["code"] = 403
             context['message'] = "Action Forbidden"
@@ -63,7 +62,7 @@ def scanQr(request):
         has_data = Driver.objects.filter(id=id, plate_number=plate_number)
 
         context["action"] = action
-        
+                
         if has_data.exists():
             
             driver_data = has_data[0]
@@ -77,6 +76,7 @@ def scanQr(request):
                     context['id'] = transact_detail.pk
                     context['code'] = 200
                     context['plate_number'] = driver_data.plate_number
+                    context["endpoint"] = endpoint
                     context['message'] = "Transaction Success!"
                 else:
                     context['code'] = 403
@@ -92,14 +92,33 @@ def scanQr(request):
                     context['id'] = transact_detail.pk
                     context['code'] = 200
                     context['plate_number'] = driver_data.plate_number
+                    context["endpoint"] = endpoint
                     context['message'] = "Transaction Success!"
                 else:
                     context['code'] = 403
                     context['message'] = "Driver didn't pay!"
-            
+                    
+            elif action.strip() == "pay_pass":
+                if driver_data.status != "paid":
+                    pay_detail = DriverScan(driver=driver_data, endpoint="Pepelitan", action="Pay")
+                    pay_detail.save()
+                
+                    scan_detail = DriverScan(driver=driver_data, endpoint=endpoint, action="Scanned")
+                    scan_detail.save()
+                    
+                    context['id'] = pay_detail.pk
+                    context['code'] = 200
+                    context['plate_number'] = driver_data.plate_number
+                    context["endpoint"] = "Pepelitan"
+                    context["action"] = "Paid"
+                    context['message'] = "Driver Paid!"
+                else:
+                    context['code'] = 403
+                    context['message'] = "Driver Already Paid!"
+                
             else:
                 context['code'] = 404
-                context["message"] = "Driver Details not Found"
+                context["message"] = "Invalid Action!"
 
         else:
             context['code'] = 404
@@ -117,7 +136,7 @@ def transactions(request):
     if request.user.designation == 1: 
         transact = DriverScan.objects.filter(
             scanDate__range=(start_of_day, end_of_day),
-            endpoint="merkado"
+            action="Pay"
         )
     else:
         transact = DriverScan.objects.filter(

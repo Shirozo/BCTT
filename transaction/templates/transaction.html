@@ -21,9 +21,9 @@
                 <div class="col">
                   <h5 class="card-title text-uppercase text-muted mb-0">
                     {% if request.user.designation == 1 or request.user.is_superuser%}
-                      Transaction Count
+                    Transaction Count
                     {% else %}
-                      Paid Driver
+                    Paid Driver
                     {% endif %}
                   </h5>
                   <span class="h2 font-weight-bold mb-0" id="t_count">{{count}}</span>
@@ -61,7 +61,7 @@
             <thead>
               <tr>
                 <th>Body Number</th>
-                <th>Endpoint</th>
+                <th>Starting Point</th>
                 <th>Action</th>
                 <th>Date</th>
               </tr>
@@ -98,14 +98,15 @@
           <div id="driver_data"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger s1-b1-c btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i>
+        <button type="button" class="btn btn-danger s1-b1-c btn-flat pull-left" data-dismiss="modal"><i
+            class="fa fa-close"></i>
           Close</button>
         <button type="submit" class="btn btn-success s1-b1-s btn-flat" name="add">
-          <i class="fa fa-save" id="save1"></i> 
+          <i class="fa fa-save" id="save1"></i>
           <i class="lds-dual-ring" id="load1" style="display: none;"></i>
-          {% if request.user.designation == 1 %} 
+          {% if request.user.designation == 1 %}
           Pay
-          {% else %} 
+          {% else %}
           Scan
           {% endif %}
         </button>
@@ -127,18 +128,20 @@
           {% csrf_token %}
           <b id="code_show">Code:</b>
           <input type="hidden" name="data" id="bcode_data" class="form-control">
+          <input type="hidden" name="b_action" id="b_action">
           <div id="driver_data_bcode"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn s-b-c btn-danger btn-flat pull-left" data-dismiss="modal" id="bcode_close"><i class="fa fa-close"></i>
+        <button type="button" class="btn s-b-c btn-danger btn-flat pull-left" data-dismiss="modal" id="bcode_close"><i
+            class="fa fa-close"></i>
           Close</button>
         <button type="submit" class="btn btn-success s-b-s btn-flat" name="add">
-          <i class="fa fa-save" id="save"></i> 
+          <i class="fa fa-save" id="save"></i>
           <div class="lds-dual-ring" id="load" style="display: none;"></div>
-          {% if request.user.designation == 1 %} 
-          Pay
-          {% else %} 
-          Scan
+          {% if request.user.designation == 1 %}
+          <span>Pay</span>
+          {% else %}
+          <span>Scan</span>
           {% endif %}
         </button>
       </div>
@@ -167,7 +170,8 @@
       ],
     })
 
-    $("#bcode_close").on("click", function(e) {
+
+    $("#bcode_close").on("click", function (e) {
       e.preventDefault()
       $("#bcode").modal("hide")
     })
@@ -185,6 +189,7 @@
       let formId = $(e.target).attr("id");
       if (formId === "send_data") {
         code_data = $("#bcode_data").val()
+        b_action = $("#b_action").val()
         $(".s-b-c").attr("disabled", true)
         $(".s-b-s").attr("disabled", true)
         $("#save").css("display", "none")
@@ -202,41 +207,42 @@
         type: "GET",
         url: "{% url 'scan' %}",
         data: {
-          data : code_data,
-          designation : "{{ request.user.designation}}"
+          data: code_data,
+          designation: "{{ request.user.designation}}",
+          "b_action": b_action
         },
         dataType: 'json',
         success: function (response) {
           if (response.code === 200) {
             TransactionSocket.send(JSON.stringify({
               code: code_data,
-              action : response.action,
-              transact_id : response.id
+              action: response.action,
+              transact_id: response.id
             }))
 
             if (response.action === "pass") {
-              p_nmbr = code_data.split("-")      
+              p_nmbr = code_data.split("-")
               p_number = p_nmbr[1]
-              
-              fetch(`{% url "removeshow" %}?id=${p_number}`)
-              .then(response => {
-                if (!response.ok) {
-                  toastr.error("Reload your page!")
-                }
-                else {
-                  return response.json
-                }
-              })
 
-              table.rows().every(function() {
+              fetch(`{% url "removeshow" %}?id=${p_number}`)
+                .then(response => {
+                  if (!response.ok) {
+                    toastr.error("Reload your page!")
+                  }
+                  else {
+                    return response.json
+                  }
+                })
+
+              table.rows().every(function () {
                 var data = this.data();
                 if (data[0] === p_number) {
                   this.remove();
                 }
               })
-      
+
               table.draw();
-              
+
               if ("{{ request.user.designation}}" === "2") {
                 var tag = $("#t_count")
                 var tagValue = parseInt(tag.text())
@@ -245,27 +251,29 @@
             }
 
             else {
-              $.ajax({
-                type: "GET",
-                url : "{% url 'transactAPI' %}",
-                data: {
-                  id : response.id
-                },
-                dataType : "json",
-                success : function (response) {
-                  date = new Date(response.date)
-                  let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
-                  table.row.add([
-                    response.body_number,
-                    response.endpoint,
-                    response.action,
-                    date.toLocaleString('en-US', options)
-                  ]).draw()
-                  var tag = $("#t_count")
-                  var tagValue = parseInt(tag.text())
-                  tag.text(tagValue + 1)
-                }
-              })
+              if (response.endpoint === "Merkado") {
+                $.ajax({
+                  type: "GET",
+                  url: "{% url 'transactAPI' %}",
+                  data: {
+                    id: response.id
+                  },
+                  dataType: "json",
+                  success: function (response) {
+                    date = new Date(response.date)
+                    let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+                    table.row.add([
+                      response.body_number,
+                      response.endpoint,
+                      response.action,
+                      date.toLocaleString('en-US', options)
+                    ]).draw()
+                    var tag = $("#t_count")
+                    var tagValue = parseInt(tag.text())
+                    tag.text(tagValue + 1)
+                  }
+                })
+              }
             }
 
             toastr.success(response.action + " Success!")
@@ -291,36 +299,65 @@
       }
     });
 
-    TransactionSocket.onmessage = function(e) {
+    TransactionSocket.onmessage = function (e) {
       const designation = "{{request.user.designation}}"
       transact_data = JSON.parse(e.data)
       plate_number = transact_data.code.split("-")
       if (+designation === 2 && transact_data.action === "pay") {
-        toastr.success(`Body Number '${plate_number[1]}' has paid at merkado`)
+        toastr.success(`Body Number '${plate_number[1]}' has paid at merkado.`)
         $.ajax({
           type: "GET",
-          url : "{% url 'transactAPI' %}",
+          url: "{% url 'transactAPI' %}",
           data: {
-            id : transact_data.transact_id
+            id: transact_data.transact_id
           },
-          dataType : "json",
-          success : function (response) {
-            date = new Date(response.date)
-            let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
-            table.row.add([
-              response.body_number,
-              response.endpoint,
-              response.action,
-              date.toLocaleString('en-US', options)
-            ]).draw()
-            var tag = $("#t_count")
-            var tagValue = parseInt(tag.text())
-            tag.text(tagValue + 1)
+          dataType: "json",
+          success: function (response) {
+              date = new Date(response.date)
+              let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+              table.row.add([
+                response.body_number,
+                response.endpoint,
+                response.action,
+                date.toLocaleString('en-US', options)
+              ]).draw()
+              var tag = $("#t_count")
+              var tagValue = parseInt(tag.text())
+              tag.text(tagValue + 1)
+            }
+        })
+        console.log("1")
+      }
+      else if (+designation === 1 && transact_data.action === "Paid") {
+        console.log("Here")
+        console.log(+designation === 1)
+        toastr.success(`Body Number '${plate_number[1]}' has paid at pepelitan.`)
+        $.ajax({
+          type: "GET",
+          url: "{% url 'transactAPI' %}",
+          data: {
+            id: transact_data.transact_id
+          },
+          dataType: "json",
+          success: function (response) {
+            if (+designation === 1 && response.endpoint === "Pepelitan") {
+              date = new Date(response.date)
+              let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+              table.row.add([
+                response.body_number,
+                response.endpoint,
+                response.action,
+                date.toLocaleString('en-US', options)
+              ]).draw()
+              var tag = $("#t_count")
+              var tagValue = parseInt(tag.text())
+              tag.text(tagValue + 1)
+            }
           }
         })
       }
     }
-    
+
   })
 
   function displayImage(imageData) {
@@ -364,10 +401,18 @@
           if (response.status === "paid") {
             html += `
                   <b style="width: fit-content; padding: 2% 2%; background-color:green; border-radius: .8em;margin-bottom: 5px; color:black;" >PAID</b>`
+            $("#b_action").val("pass")
           }
           else {
             html += `
                   <b style="width: fit-content; padding: 2% 2%; background-color:red; border-radius: .8em; margin-bottom: 5px;color:black;">UNPAID</b>`
+            $("#b_action").val("pay")
+
+            if ("{{request.user.designation}}" === "2") {
+              $("#b_action").val("pay_pass")
+              $('#load').next().text('Pay and Scan');
+            }
+
           }
         }
         id ? document.getElementById("driver_data_bcode").innerHTML = html : document.getElementById("driver_data").innerHTML = html
@@ -387,11 +432,11 @@
 <script type="text/javascript" src="/static/assets/js/detection.js"></script>
 <script type="text/javascript">
   $(document).scannerDetection({
-		avgTimeByChar: 40,
-		onComplete: function(barcode, qty){ 
-        showQr(barcode)
-     },
-	});
+    avgTimeByChar: 40,
+    onComplete: function (barcode, qty) {
+      showQr(barcode)
+    },
+  });
 
 
   function showQr(bcode) {
@@ -404,11 +449,11 @@
       type: "GET",
       url: "{% url 'driver_api' %}",
       data: {
-        "qr" : bcode
+        "qr": bcode
       },
-      success: function(response) {
+      success: function (response) {
         if (response.code === 200) {
-          setTimeout(()=> {
+          setTimeout(() => {
             $("#bcode").modal("show")
             show_code(bcode)
           }, 200)

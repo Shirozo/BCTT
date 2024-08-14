@@ -13,11 +13,10 @@ def loginPage(request):
 
         if request.method == "POST":
 
-            forms  = AuthenticationForm(request,request.POST)
+            forms = AuthenticationForm(request,request.POST)
             print(forms)
             username = forms.cleaned_data.get("username")
             password = forms.cleaned_data.get("password")
-            print(password)
             user = authenticate(username=username, password=password)
             if user:
                 login(request, user)

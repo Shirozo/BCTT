@@ -15,7 +15,6 @@ class DriverForm(FormSetting):
             "first_name",
             "last_name",
             "plate_number",
-            "rate"
         ]
 
 class OperatorForm(FormSetting):
