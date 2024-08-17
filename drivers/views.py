@@ -20,7 +20,7 @@ def tricycle(request):
 
         if driverForm.is_valid() and operatorForm.is_valid():
             driver = driverForm.save() 
-            qr = qrcode.make(f"{driver.id}-{driver.plate_number}-{driver.rate}")
+            qr = qrcode.make(f"{driver.id}-{driver.plate_number}")
             dest = f"qr/{driver.id}.png"
             qr.save(dest)
 
@@ -143,7 +143,7 @@ def update(request):
                 nd = new_driver_data.save()
                 new_op.save()
 
-                qr = qrcode.make(f"{nd.id}-{nd.plate_number}-{nd.rate}")
+                qr = qrcode.make(f"{nd.id}-{nd.plate_number}")
                 dest = f"qr/{nd.id}.png"
                 qr.save(dest)
 
