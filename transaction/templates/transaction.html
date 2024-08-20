@@ -96,6 +96,11 @@
           <b>Code:</b>
           <input type="text" name="data" id="data" class="form-control" oninput="show_code()">
           <div id="driver_data"></div>
+          {% if request.user.designation == 1 %}
+          <input type="hidden" name="b_action" id="b_action1" value="pay">
+          {% else %}
+          <input type="hidden" name="b_action" id="b_action1" value="pass">
+          {% endif %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger s1-b1-c btn-flat pull-left" data-dismiss="modal"><i
@@ -105,9 +110,9 @@
           <i class="fa fa-save" id="save1"></i>
           <i class="lds-dual-ring" id="load1" style="display: none;"></i>
           {% if request.user.designation == 1 %}
-          Pay
+          <span>Pay</span>
           {% else %}
-          Scan
+          <span>Scan</span>
           {% endif %}
         </button>
       </div>
@@ -197,6 +202,7 @@
       }
       else {
         code_data = $("#data").val()
+        b_action = $("#b_action1").val()
         $(".s1-b1-c").attr("disabled", true)
         $(".s1-b1-s").attr("disabled", true)
         $("#save1").css("display", "none")
@@ -313,18 +319,18 @@
           },
           dataType: "json",
           success: function (response) {
-              date = new Date(response.date)
-              let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
-              table.row.add([
-                response.body_number,
-                response.endpoint,
-                response.action,
-                date.toLocaleString('en-US', options)
-              ]).draw()
-              var tag = $("#t_count")
-              var tagValue = parseInt(tag.text())
-              tag.text(tagValue + 1)
-            }
+            date = new Date(response.date)
+            let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+            table.row.add([
+              response.body_number,
+              response.endpoint,
+              response.action,
+              date.toLocaleString('en-US', options)
+            ]).draw()
+            var tag = $("#t_count")
+            var tagValue = parseInt(tag.text())
+            tag.text(tagValue + 1)
+          }
         })
         console.log("1")
       }
@@ -410,7 +416,9 @@
 
             if ("{{request.user.designation}}" === "2") {
               $("#b_action").val("pay_pass")
+              $("#b_action1").val("pay_pass")
               $('#load').next().text('Pay and Scan');
+              $('#load1').next().text('Pay and Scan');
             }
 
           }
