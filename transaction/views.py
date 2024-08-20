@@ -43,7 +43,7 @@ def scanQr(request):
     designation = request.GET.get("designation")
     action = request.GET.get("b_action")
     try:
-        id, plate_number, _ = data.split("-")
+        id, plate_number = data.split("-")
     except Exception:
         context['code'] = 500
         context['message'] = "Invalid QR Code!"
@@ -157,7 +157,7 @@ def driver_exist(request):
     context = {}
     qr = request.GET.get("qr")
     try:
-        id, plate_number, _ = qr.split("-")
+        id, plate_number = qr.split("-")
     except Exception:
         context["code"] = 403
     else:

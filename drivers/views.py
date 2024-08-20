@@ -53,6 +53,7 @@ def getQr(request):
         qr_data = id.split("-")
         if len(qr_data) >= 2:
             if not qr_data[1]:
+                context['message'] = "No id"
                 context["code"] = 403
                 return JsonResponse(context)   
             
@@ -60,7 +61,8 @@ def getQr(request):
             id = qr_data[0]
         
         else:
-            context["code"] = 403
+            context['message'] = qr_data
+            context["code"] = 402
             return JsonResponse(context)
 
     print(plate_number)    
